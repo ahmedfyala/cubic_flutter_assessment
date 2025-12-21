@@ -19,9 +19,13 @@ dependencies:
   skeletonizer:
   injectable:
   get_it:
+
   url_launcher:
   firebase_crashlytics:
-
+  flutter_screenutil:
+  location:
+  google_maps_flutter:
+  permission_handler:
   shared_preferences:
   hive:
   hive_flutter:
@@ -37,7 +41,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  build_runner:
+  injectable_generator:
   flutter_lints: ^6.0.0
 
 flutter:
