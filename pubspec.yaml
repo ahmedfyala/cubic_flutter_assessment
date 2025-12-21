@@ -35,6 +35,7 @@ dependencies:
   image_picker:
   cherry_toast:
   fluttertoast:
+  screen_protector:
   intl_phone_field:
 
   cupertino_icons: ^1.0.8
@@ -52,3 +53,5 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/svgs/
+    - assets/translations/

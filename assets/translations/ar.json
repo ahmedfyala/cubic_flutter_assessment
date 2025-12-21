@@ -17,5 +17,14 @@
   "new_user_q": "أنا مستخدم جديد.",
   "already_have_account": "لديك حساب بالفعل؟",
   "login_error": "فشل تسجيل الدخول، يرجى التحقق من البيانات",
-  "register_error": "فشل إنشاء الحساب، يرجى المحاولة مرة أخرى"
+  "register_error": "فشل إنشاء الحساب، يرجى المحاولة مرة أخرى",
+  "invalid_email": "يرجى إدخال بريد إلكتروني صحيح",
+  "invalid_password": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+  "invalid_name": "الاسم الكامل مطلوب",
+  "field_required": "هذا الحقل مطلوب",
+  "skip": "تخطي",
+  "confirm_password": "تأكيد كلمة المرور",
+  "confirm_password_hint": "أعد إدخال كلمة المرور",
+  "passwords_dont_match": "كلمات المرور غير متطابقة",
+  "password_complexity_error": "يجب أن تحتوي على حرف كبير، صغير، رقم ورمز"
 }

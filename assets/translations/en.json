@@ -17,5 +17,14 @@
   "new_user_q": "I’m a new user.",
   "already_have_account": "Already have an account?",
   "login_error": "Login failed, please check your credentials",
-  "register_error": "Registration failed, please try again"
+  "register_error": "Registration failed, please try again",
+  "invalid_email": "Please enter a valid email address",
+  "invalid_password": "Password must be at least 8 characters",
+  "invalid_name": "Full name is required",
+  "field_required": "This field is required",
+  "skip": "Skip",
+  "confirm_password": "Confirm Password",
+  "confirm_password_hint": "Re-enter your password",
+  "passwords_dont_match": "Passwords do not match",
+  "password_complexity_error": "Must have uppercase, lowercase, number and special character"
 }

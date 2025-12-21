@@ -1,11 +1,17 @@
-// DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
+
 
 abstract class LocaleKeys {
   static const already_have_account = 'already_have_account';
+  static const confirm_password = 'confirm_password';
+  static const confirm_password_hint = 'confirm_password_hint';
   static const email_address = 'email_address';
   static const email_hint = 'email_hint';
+  static const field_required = 'field_required';
   static const full_name = 'full_name';
   static const full_name_hint = 'full_name_hint';
+  static const invalid_email = 'invalid_email';
+  static const invalid_name = 'invalid_name';
+  static const invalid_password = 'invalid_password';
   static const login_error = 'login_error';
   static const new_user_q = 'new_user_q';
   static const next = 'next';
@@ -16,8 +22,11 @@ abstract class LocaleKeys {
   static const onboarding_title_2 = 'onboarding_title_2';
   static const onboarding_title_3 = 'onboarding_title_3';
   static const password = 'password';
+  static const password_complexity_error = 'password_complexity_error';
   static const password_hint = 'password_hint';
+  static const passwords_dont_match = 'passwords_dont_match';
   static const register_error = 'register_error';
   static const sign_in = 'sign_in';
   static const sign_up = 'sign_up';
+  static const skip = 'skip';
 }

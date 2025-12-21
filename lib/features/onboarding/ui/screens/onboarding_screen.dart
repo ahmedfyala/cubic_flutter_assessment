@@ -6,6 +6,8 @@ import '../../../../core/routes/route_names.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../data/models/onboarding_model.dart';
 import '../widgets/onboarding_item.dart';
+import '../../../../config/service_locator.dart';
+import '../../../../core/services/cache_service.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -38,13 +40,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
+            Align(
+              alignment: AlignmentDirectional.topEnd,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                child: TextButton(
+                  onPressed: () async {
+                    await sl<CacheService>().setOnboardingDone();
+                    if (!mounted) return;
+                    Navigator.pushReplacementNamed(context, RouteNames.login);
+                  },
+                  child: Text(
+                    LocaleKeys.skip.tr(),
+                    style: TextStyle(
+                      color: colorScheme.primary,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
@@ -66,15 +88,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   decoration: BoxDecoration(
                     color: _currentPage == index
                         ? colorScheme.primary
-                        : colorScheme.outline,
+                        : colorScheme.outline.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(3.r),
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 60.h),
+            SizedBox(height: 50.h),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: ElevatedButton(
                 onPressed: () {
                   if (_currentPage < _items.length - 1) {
@@ -89,7 +111,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: Text(LocaleKeys.next.tr()),
               ),
             ),
-            SizedBox(height: 40.h),
+            SizedBox(height: 30.h),
           ],
         ),
       ),
