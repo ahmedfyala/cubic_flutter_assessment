@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "861381109066",
+    "project_id": "cubic-flutter-assessment",
+    "storage_bucket": "cubic-flutter-assessment.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:861381109066:android:ef102e07466101eb900db3",
+        "android_client_info": {
+          "package_name": "com.example.cubic_flutter_assessment"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8zd7UNZlWVI63Ke6W-a9KEp7E5HyhG54"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

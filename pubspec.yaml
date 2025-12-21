@@ -1,0 +1,48 @@
+name: cubic_flutter_assessment
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core:
+  firebase_auth:
+  flutter_bloc:
+  equatable:
+  dio:
+  flutter_secure_storage:
+  skeletonizer:
+  injectable:
+  get_it:
+  url_launcher:
+  firebase_crashlytics:
+
+  shared_preferences:
+  hive:
+  hive_flutter:
+  easy_localization:
+  flutter_svg:
+  image_picker:
+  cherry_toast:
+  fluttertoast:
+  intl_phone_field:
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/images/
