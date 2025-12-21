@@ -26,5 +26,12 @@
   "confirm_password": "Confirm Password",
   "confirm_password_hint": "Re-enter your password",
   "passwords_dont_match": "Passwords do not match",
-  "password_complexity_error": "Must have uppercase, lowercase, number and special character"
+  "password_complexity_error": "Must have uppercase, lowercase, number and special character",
+  "account_number": "Account Number",
+  "balance": "Total Balance",
+  "my_cards": "My Cards",
+  "find_branches": "Find Nearest Branches",
+  "recent_transactions": "Recent Transactions",
+  "see_all": "See All",
+  "current_balance": "Current Balance", "expiry_date": "Expiry Date", "cvv": "CVV"
 }

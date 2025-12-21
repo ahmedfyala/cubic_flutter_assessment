@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart'; 
-import '../../config/service_locator.dart'; 
-import '../../features/auth/logic/auth_cubit.dart'; 
-import '../../features/auth/ui/screens/login_screen.dart'; 
-import '../../features/auth/ui/screens/register_screen.dart'; 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../config/service_locator.dart';
+import '../../features/auth/logic/auth_cubit.dart';
+import '../../features/auth/logic/biometrics_cubit.dart';
+import '../../features/auth/ui/screens/biometric_setup_screen.dart';
+import '../../features/auth/ui/screens/login_screen.dart';
+import '../../features/auth/ui/screens/register_screen.dart';
+import '../../features/dashboard/logic/dashboard_cubit.dart';
+import '../../features/dashboard/ui/screens/dashboard_screen.dart';
 import '../../features/onboarding/ui/screens/onboarding_screen.dart';
 import 'route_names.dart';
 
@@ -29,11 +33,24 @@ class AppRoutes {
           ),
         );
 
-      case RouteNames.dashboard:
+      case RouteNames.biometricSetup:
         return _material(
-          const Scaffold(body: Center(child: Text('Dashboard Screen'))),
+          BlocProvider(
+            create: (context) => sl<BiometricsCubit>(),
+            child: const BiometricSetupScreen(),
+          ),
         );
 
+      case RouteNames.dashboard:
+        return _material(
+          MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => sl<AuthCubit>()),
+              BlocProvider(create: (context) => sl<DashboardCubit>()),
+            ],
+            child: const DashboardScreen(),
+          ),
+        );
       case RouteNames.branchesMap:
         return _material(
           const Scaffold(body: Center(child: Text('Branches Map Screen'))),

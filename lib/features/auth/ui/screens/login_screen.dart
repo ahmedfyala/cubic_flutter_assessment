@@ -59,8 +59,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
               if (cache.isBiometricEnabled()) {
                 Navigator.pushReplacementNamed(context, RouteNames.dashboard);
-              } else {
-                Navigator.pushReplacementNamed(context, RouteNames.branchesMap);
               }
             } else if (state is AuthError) {
               Notifier.show(

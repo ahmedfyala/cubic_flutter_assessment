@@ -36,6 +36,8 @@ dependencies:
   cherry_toast:
   fluttertoast:
   screen_protector:
+  local_auth:
+  logger:
   intl_phone_field:
 
   cupertino_icons: ^1.0.8

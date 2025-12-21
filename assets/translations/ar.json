@@ -26,5 +26,12 @@
   "confirm_password": "تأكيد كلمة المرور",
   "confirm_password_hint": "أعد إدخال كلمة المرور",
   "passwords_dont_match": "كلمات المرور غير متطابقة",
-  "password_complexity_error": "يجب أن تحتوي على حرف كبير، صغير، رقم ورمز"
+  "password_complexity_error": "يجب أن تحتوي على حرف كبير، صغير، رقم ورمز",
+  "account_number": "رقم الحساب",
+  "balance": "إجمالي الرصيد",
+  "my_cards": "بطاقاتي",
+  "find_branches": "ابحث عن أقرب الفروع",
+  "recent_transactions": "أحدث المعاملات",
+  "see_all": "عرض الكل",
+  "current_balance": "الرصيد الحالي", "expiry_date": "تاريخ الانتهاء", "cvv": "رمز الأمان"
 }
