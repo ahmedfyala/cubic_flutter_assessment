@@ -1,5 +1,11 @@
-import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
 
-final GetIt sl = GetIt.instance;
+import 'app.dart';
+import 'config/service_locator.dart';
 
-void setupServiceLocator() {}
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  setupServiceLocator();
+
+  runApp(const MyApp());
+}

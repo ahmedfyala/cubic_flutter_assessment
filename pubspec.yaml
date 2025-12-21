@@ -26,6 +26,7 @@ dependencies:
   location:
   google_maps_flutter:
   permission_handler:
+  flutter_native_splash:
   shared_preferences:
   hive:
   hive_flutter:
