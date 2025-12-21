@@ -11,6 +11,7 @@ class CacheService {
 
   static const String _tokenKey = 'auth_token';
   static const String _onboardingKey = 'onboarding_done';
+  static const String _biometricEnabledKey = 'biometric_enabled';
 
   Future<void> saveToken(String token) async {
     await _secureStorage.write(key: _tokenKey, value: token);
@@ -30,5 +31,18 @@ class CacheService {
 
   bool isOnboardingDone() {
     return _sharedPrefs.getBool(_onboardingKey) ?? false;
+  }
+
+  Future<void> setBiometricEnabled(bool enabled) async {
+    await _sharedPrefs.setBool(_biometricEnabledKey, enabled);
+  }
+
+  bool isBiometricEnabled() {
+    return _sharedPrefs.getBool(_biometricEnabledKey) ?? false;
+  }
+
+  Future<void> clearAll() async {
+    await _secureStorage.deleteAll();
+    await _sharedPrefs.clear();
   }
 }

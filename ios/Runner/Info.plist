@@ -9,7 +9,10 @@
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
+
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>NSFaceIDUsageDescription</key>
+        <string>Why is my app using FaceID?</string>
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>

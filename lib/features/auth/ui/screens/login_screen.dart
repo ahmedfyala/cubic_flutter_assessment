@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../config/service_locator.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/routes/route_names.dart';
+import '../../../../core/services/cache_service.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/app_validator.dart';
 import '../../../../core/utils/notifier.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -23,9 +26,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
 
   @override
   void dispose() {
@@ -45,7 +55,13 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state is AuthSuccess) {
-              Navigator.pushReplacementNamed(context, RouteNames.dashboard);
+              final cache = sl<CacheService>();
+
+              if (cache.isBiometricEnabled()) {
+                Navigator.pushReplacementNamed(context, RouteNames.dashboard);
+              } else {
+                Navigator.pushReplacementNamed(context, RouteNames.branchesMap);
+              }
             } else if (state is AuthError) {
               Notifier.show(
                 context: context,
@@ -77,12 +93,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     labelText: LocaleKeys.email_address.tr(),
                     hintText: LocaleKeys.email_hint.tr(),
                     keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
                     prefixIcon: Padding(
                       padding: EdgeInsets.all(14.r),
                       child: SvgPicture.asset(
                         AppAssets.icEmail,
                         colorFilter: ColorFilter.mode(
-                          colorScheme.outline,
+                          colorScheme.onSurface.withOpacity(0.5),
                           BlendMode.srcIn,
                         ),
                       ),
@@ -94,6 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _passwordController,
                     labelText: LocaleKeys.password.tr(),
                     hintText: LocaleKeys.password_hint.tr(),
+                    textInputAction: TextInputAction.done,
                     validator: AppValidator.validateLoginPassword,
                   ),
                   SizedBox(height: 48.h),
@@ -120,6 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () =>
                         Navigator.pushNamed(context, RouteNames.register),
                   ),
+                  SizedBox(height: 24.h),
                 ],
               ),
             ),

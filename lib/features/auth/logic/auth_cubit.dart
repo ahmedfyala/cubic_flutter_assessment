@@ -8,7 +8,7 @@ import 'auth_state.dart';
 @injectable
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepo _authRepo;
-  final CacheService _cacheService; 
+  final CacheService _cacheService;
 
   AuthCubit(this._authRepo, this._cacheService) : super(AuthInitial());
 
@@ -18,7 +18,7 @@ class AuthCubit extends Cubit<AuthState> {
       final credential = await _authRepo.login(email, password);
       final token = credential.user?.uid;
       if (token != null) {
-        await _cacheService.saveToken(token); 
+        await _cacheService.saveToken(token);
       }
       emit(AuthSuccess());
     } on FirebaseAuthException catch (e) {
@@ -40,6 +40,12 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> logout() async {
+    await _cacheService.clearAuthData();
+    await FirebaseAuth.instance.signOut();
+    emit(AuthInitial());
+  }
+
   String _mapFirebaseError(String code) {
     switch (code) {
       case 'user-not-found':
@@ -48,6 +54,8 @@ class AuthCubit extends Cubit<AuthState> {
         return 'Invalid email or password.';
       case 'email-already-in-use':
         return 'This email is already registered.';
+      case 'weak-password':
+        return 'The password provided is too weak.';
       case 'invalid-email':
         return 'The email address is badly formatted.';
       default:
