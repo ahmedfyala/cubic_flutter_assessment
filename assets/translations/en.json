@@ -1,0 +1,21 @@
+{
+  "onboarding_title_1": "Fastest Payment in the world",
+  "onboarding_desc_1": "Integrate multiple payment methoods to help you up the process quickly",
+  "onboarding_title_2": "The most Secoure Platfrom for Customer",
+  "onboarding_desc_2": "Built-in Fingerprint, face recognition and more, keeping you completely safe",
+  "onboarding_title_3": "Paying for Everything is Easy and Convenient",
+  "onboarding_desc_3": "Built-in Fingerprint, face recognition and more, keeping you completely safe",
+  "next": "Next",
+  "sign_in": "Sign In",
+  "sign_up": "Sign Up",
+  "email_address": "Email Address",
+  "email_hint": "Enter your email",
+  "password": "Password",
+  "password_hint": "Enter your password",
+  "full_name": "Full Name",
+  "full_name_hint": "Enter your full name",
+  "new_user_q": "I’m a new user.",
+  "already_have_account": "Already have an account?",
+  "login_error": "Login failed, please check your credentials",
+  "register_error": "Registration failed, please try again"
+}
