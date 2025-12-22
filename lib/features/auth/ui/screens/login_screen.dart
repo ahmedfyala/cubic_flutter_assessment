@@ -33,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAutoBiometric();
     });
@@ -42,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final cache = sl<CacheService>();
     final token = await cache.getToken();
 
+    
     if (token != null && cache.isBiometricEnabled()) {
       _triggerBiometric();
     }
@@ -83,6 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 (route) => false,
               );
             } else if (state is AuthRegisterSuccess) {
+              
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 RouteNames.biometricSetup,
@@ -138,6 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     validator: AppValidator.validateLoginPassword,
                   ),
                   SizedBox(height: 48.h),
+                  
                   BlocBuilder<AuthCubit, AuthState>(
                     builder: (context, state) {
                       return CustomElevatedButton(

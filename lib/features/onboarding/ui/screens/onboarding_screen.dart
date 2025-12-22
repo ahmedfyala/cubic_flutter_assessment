@@ -98,13 +98,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_currentPage < _items.length - 1) {
                     _pageController.nextPage(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                     );
                   } else {
+                    
+                    await sl<CacheService>().setOnboardingDone();
+                    if (!mounted) return;
                     Navigator.pushReplacementNamed(context, RouteNames.login);
                   }
                 },
