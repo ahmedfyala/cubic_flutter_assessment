@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import '../../../core/services/biometric_service.dart';
 import '../../../core/services/cache_service.dart';
+import '../../../generated/locale_keys.g.dart';
 
 sealed class BiometricsState {}
 
@@ -26,18 +28,22 @@ class BiometricsCubit extends Cubit<BiometricsState> {
 
   Future<void> enableBiometrics() async {
     emit(BiometricsLoading());
-    final isSupported = await _biometricService.isDeviceSupported();
-    if (!isSupported) {
-      emit(BiometricsFailure("Biometrics not supported on this device"));
-      return;
-    }
+    try {
+      final isSupported = await _biometricService.isDeviceSupported();
+      if (!isSupported) {
+        emit(BiometricsFailure(LocaleKeys.biometrics_not_supported.tr()));
+        return;
+      }
 
-    final authenticated = await _biometricService.authenticate();
-    if (authenticated) {
-      await _cacheService.setBiometricEnabled(true);
-      emit(BiometricsSuccess());
-    } else {
-      emit(BiometricsFailure("Authentication failed"));
+      final authenticated = await _biometricService.authenticate();
+      if (authenticated) {
+        await _cacheService.setBiometricEnabled(true);
+        emit(BiometricsSuccess());
+      } else {
+        emit(BiometricsFailure(LocaleKeys.auth_failed.tr()));
+      }
+    } catch (e) {
+      emit(BiometricsFailure(LocaleKeys.operation_failed.tr()));
     }
   }
 }

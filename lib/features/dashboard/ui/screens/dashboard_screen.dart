@@ -11,6 +11,7 @@ import '../widgets/dashboard_header.dart';
 import '../widgets/credit_card_widget.dart';
 import '../widgets/transaction_item.dart';
 import '../widgets/account_summary_card.dart';
+import '../widgets/dashboard_loading_view.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -34,70 +35,81 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: SafeArea(
         child: BlocBuilder<DashboardCubit, DashboardState>(
           builder: (context, state) {
+            if (state is DashboardLoading) {
+              return const DashboardLoadingView();
+            }
+
             if (state is DashboardSuccess) {
-              return SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Column(
-                  children: [
-                    SizedBox(height: 20.h),
-                    DashboardHeader(
-                      userName: state.userName,
-                      onLogoutTap: () async {
-                        await context.read<AuthCubit>().logout();
-                        if (context.mounted)
-                          Navigator.pushReplacementNamed(
-                            context,
-                            RouteNames.login,
-                          );
-                      },
-                    ),
-                    SizedBox(height: 40.h),
-                    AccountSummaryCard(account: state.account),
-                    SizedBox(height: 20.h),
-                    CreditCardWidget(account: state.account),
-                    SizedBox(height: 32.h),
-                    ElevatedButton(
-                      onPressed: () =>
-                          Navigator.pushNamed(context, RouteNames.branchesMap),
-                      child: Text(LocaleKeys.find_branches.tr()),
-                    ),
-                    SizedBox(height: 32.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          LocaleKeys.recent_transactions.tr(),
-                          style: TextStyle(
-                            color: colorScheme.onSurface,
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          LocaleKeys.see_all.tr(),
-                          style: TextStyle(
-                            color: colorScheme.primary,
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.h),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: state.transactions.length,
-                      separatorBuilder: (_, __) => SizedBox(height: 12.h),
-                      itemBuilder: (context, index) => TransactionItem(
-                        transaction: state.transactions[index],
+              return RefreshIndicator(
+                onRefresh: () =>
+                    context.read<DashboardCubit>().loadDashboardData(),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20.h),
+                      DashboardHeader(
+                        userName: state.userName,
+                        onLogoutTap: () async {
+                          await context.read<AuthCubit>().logout();
+                          if (context.mounted) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              RouteNames.login,
+                            );
+                          }
+                        },
                       ),
-                    ),
-                    SizedBox(height: 24.h),
-                  ],
+                      SizedBox(height: 40.h),
+                      AccountSummaryCard(account: state.account),
+                      SizedBox(height: 20.h),
+                      CreditCardWidget(account: state.account),
+                      SizedBox(height: 32.h),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pushNamed(
+                          context,
+                          RouteNames.branchesMap,
+                        ),
+                        child: Text(LocaleKeys.find_branches.tr()),
+                      ),
+                      SizedBox(height: 32.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            LocaleKeys.recent_transactions.tr(),
+                            style: TextStyle(
+                              color: colorScheme.onSurface,
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            LocaleKeys.see_all.tr(),
+                            style: TextStyle(
+                              color: colorScheme.primary,
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16.h),
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: state.transactions.length,
+                        separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                        itemBuilder: (context, index) => TransactionItem(
+                          transaction: state.transactions[index],
+                        ),
+                      ),
+                      SizedBox(height: 24.h),
+                    ],
+                  ),
                 ),
               );
             }
-            return const Center(child: CircularProgressIndicator());
+            return const SizedBox.shrink();
           },
         ),
       ),

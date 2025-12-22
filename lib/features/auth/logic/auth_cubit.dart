@@ -19,7 +19,12 @@ class AuthCubit extends Cubit<AuthState> {
       final token = credential.user?.uid;
       if (token != null) {
         await _cacheService.saveToken(token);
-        emit(AuthSuccess());
+
+        if (!_cacheService.isBiometricEnabled()) {
+          emit(AuthRegisterSuccess());
+        } else {
+          emit(AuthSuccess());
+        }
       } else {
         emit(AuthError("User ID not found"));
       }

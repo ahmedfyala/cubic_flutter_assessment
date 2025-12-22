@@ -22,19 +22,28 @@ Future<void> main() async {
 
   await setupServiceLocator();
   await Hive.initFlutter();
-  Hive.registerAdapter(LocationModelAdapter());
+  if (!Hive.isAdapterRegistered(0)) {
+    Hive.registerAdapter(LocationModelAdapter());
+  }
+
   final securityService = sl<SecurityService>();
   await securityService.preventScreenshots();
 
   final cacheService = sl<CacheService>();
-  String initialRoute = RouteNames.splash;
+  String initialRoute;
 
   if (!cacheService.isOnboardingDone()) {
     initialRoute = RouteNames.splash;
   } else {
     final token = await cacheService.getToken();
+    final isBiometricEnabled = cacheService.isBiometricEnabled();
+
     if (token != null) {
-      initialRoute = RouteNames.dashboard;
+      if (isBiometricEnabled) {
+        initialRoute = RouteNames.login;
+      } else {
+        initialRoute = RouteNames.dashboard;
+      }
     } else {
       initialRoute = RouteNames.login;
     }

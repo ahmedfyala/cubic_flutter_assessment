@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../config/service_locator.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/routes/route_names.dart';
+import '../../../../core/services/cache_service.dart';
+import '../../../../core/services/biometric_service.dart';
 import '../../../../core/utils/app_validator.dart';
 import '../../../../core/utils/notifier.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -26,6 +29,30 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleBiometricLogin();
+    });
+  }
+
+  Future<void> _handleBiometricLogin() async {
+    final cache = sl<CacheService>();
+    final biometric = sl<BiometricService>();
+
+    if (cache.isBiometricEnabled()) {
+      final authenticated = await biometric.authenticate();
+      if (authenticated && mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          RouteNames.dashboard,
+          (route) => false,
+        );
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -50,6 +77,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 RouteNames.dashboard,
                 (route) => false,
               );
+            } else if (state is AuthRegisterSuccess) {
+              
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteNames.biometricSetup,
+                (route) => false,
+              );
             } else if (state is AuthError) {
               Notifier.show(
                 context: context,
@@ -62,7 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: Form(
               key: _formKey,
-              autovalidateMode: AutovalidateMode.disabled,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -101,21 +134,49 @@ class _LoginScreenState extends State<LoginScreen> {
                     validator: AppValidator.validateLoginPassword,
                   ),
                   SizedBox(height: 48.h),
-                  BlocBuilder<AuthCubit, AuthState>(
-                    builder: (context, state) {
-                      return CustomElevatedButton(
-                        text: LocaleKeys.sign_in.tr(),
-                        isLoading: state is AuthLoading,
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            context.read<AuthCubit>().login(
-                              _emailController.text.trim(),
-                              _passwordController.text,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: BlocBuilder<AuthCubit, AuthState>(
+                          builder: (context, state) {
+                            return CustomElevatedButton(
+                              text: LocaleKeys.sign_in.tr(),
+                              isLoading: state is AuthLoading,
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  context.read<AuthCubit>().login(
+                                    _emailController.text.trim(),
+                                    _passwordController.text,
+                                  );
+                                }
+                              },
                             );
-                          }
-                        },
-                      );
-                    },
+                          },
+                        ),
+                      ),
+                      if (sl<CacheService>().isBiometricEnabled()) ...[
+                        SizedBox(width: 16.w),
+                        GestureDetector(
+                          onTap: _handleBiometricLogin,
+                          child: Container(
+                            height: 52.h,
+                            width: 52.h,
+                            decoration: BoxDecoration(
+                              color: colorScheme.primary.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12.r),
+                              border: Border.all(
+                                color: colorScheme.primary.withOpacity(0.2),
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.fingerprint,
+                              color: colorScheme.primary,
+                              size: 30.sp,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   SizedBox(height: 32.h),
                   AuthFooter(
