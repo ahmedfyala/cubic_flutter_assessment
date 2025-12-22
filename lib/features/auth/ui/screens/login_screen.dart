@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
-            print("Current UI State: $state"); // تتبع الحالة في الواجهة
+            print("Current UI State: $state"); 
             if (state is AuthSuccess) {
               print("Navigating to Dashboard...");
               Navigator.pushNamedAndRemoveUntil(

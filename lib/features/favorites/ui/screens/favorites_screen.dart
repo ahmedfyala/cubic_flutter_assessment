@@ -30,7 +30,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       backgroundColor: Colors.transparent,
       builder: (_) => LocationDetailsSheet(
         location: loc,
-        initialIsFavorite: true, // لأننا في شاشة المفضلات أصلاً
+        initialIsFavorite: true, 
         onAdd: () async => true,
         onRemove: () async {
           await context.read<FavoritesCubit>().removeFavorite(loc.id);
@@ -62,7 +62,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               itemBuilder: (context, index) {
                 final item = state.items[index];
                 return GestureDetector(
-                  onTap: () => _showDetails(item.location), // تفعيل الضغط
+                  onTap: () => _showDetails(item.location), 
                   child: FavoriteBranchCard(
                     model: item,
                     onRemove: () => context

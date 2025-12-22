@@ -12,7 +12,7 @@ final class MapSuccess extends MapState {
   final Set<Marker> markers;
   final double userLat;
   final double userLng;
-  final bool isFromCache; // أضفنا هذا السطر
+  final bool isFromCache; 
 
   MapSuccess({
     required this.locations,

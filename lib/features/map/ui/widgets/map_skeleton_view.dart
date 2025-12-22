@@ -50,7 +50,7 @@ class _MapSkeletonViewState extends State<MapSkeletonView>
         builder: (_, __) {
           return Stack(
             children: [
-              /// ===== Fake map background (Shimmer)
+              
               Positioned.fill(
                 child: ShaderMask(
                   shaderCallback: (rect) {
@@ -69,7 +69,7 @@ class _MapSkeletonViewState extends State<MapSkeletonView>
                 ),
               ),
 
-              /// ===== Roads
+              
               Positioned.fill(
                 child: Opacity(
                   opacity: 0.5 + (_controller.value * 0.5),
@@ -77,7 +77,7 @@ class _MapSkeletonViewState extends State<MapSkeletonView>
                 ),
               ),
 
-              /// ===== Fake markers (Pulse animation)
+              
               ...List.generate(
                 7,
                 (index) => Positioned(
