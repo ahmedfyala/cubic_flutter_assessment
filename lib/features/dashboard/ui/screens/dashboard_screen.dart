@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/routes/route_names.dart';
 import '../../../../generated/locale_keys.g.dart';
-import '../../../auth/logic/auth_cubit.dart';
+import '../../../auth/logic/auth/auth_cubit.dart';
 import '../../logic/dashboard_cubit.dart';
 import '../../logic/dashboard_state.dart';
 import '../widgets/dashboard_header.dart';
@@ -51,10 +51,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       DashboardHeader(
                         userName: state.userName,
                         onLogoutTap: () async {
-                          
                           await context.read<AuthCubit>().logout();
                           if (context.mounted) {
-                            
                             Navigator.pushNamedAndRemoveUntil(
                               context,
                               RouteNames.login,

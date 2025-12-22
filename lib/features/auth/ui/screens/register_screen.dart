@@ -11,8 +11,8 @@ import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/custom_text_form_field.dart';
 import '../../../../core/widgets/password_form_field.dart';
 import '../../../../generated/locale_keys.g.dart';
-import '../../logic/auth_cubit.dart';
-import '../../logic/auth_state.dart';
+import '../../logic/auth/auth_cubit.dart';
+import '../../logic/auth/auth_state.dart';
 import '../widgets/auth_footer.dart';
 
 class RegisterScreen extends StatefulWidget {

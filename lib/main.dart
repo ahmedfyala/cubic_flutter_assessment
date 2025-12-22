@@ -20,7 +20,6 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   await ScreenUtil.ensureScreenSize();
 
-  
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);

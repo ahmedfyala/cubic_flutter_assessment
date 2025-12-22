@@ -6,8 +6,8 @@ import '../../../../core/routes/route_names.dart';
 import '../../../../core/utils/notifier.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../generated/locale_keys.g.dart';
-import '../../logic/biometric_state.dart';
-import '../../logic/biometrics_cubit.dart';
+import '../../logic/biometric/biometric_state.dart';
+import '../../logic/biometric/biometrics_cubit.dart';
 
 class BiometricSetupScreen extends StatelessWidget {
   const BiometricSetupScreen({super.key});

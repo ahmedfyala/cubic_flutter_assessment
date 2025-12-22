@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import '../../../core/services/biometric_service.dart';
-import '../../../core/services/cache_service.dart';
+import '../../../../core/services/biometric_service.dart';
+import '../../../../core/services/cache_service.dart';
 import 'biometric_state.dart';
 
 @injectable

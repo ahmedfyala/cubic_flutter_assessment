@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../config/service_locator.dart';
-import '../../features/auth/logic/auth_cubit.dart';
-import '../../features/auth/logic/biometrics_cubit.dart';
+import '../../features/auth/logic/auth/auth_cubit.dart';
+import '../../features/auth/logic/biometric/biometrics_cubit.dart';
 import '../../features/auth/ui/screens/biometric_setup_screen.dart';
 import '../../features/auth/ui/screens/login_screen.dart';
 import '../../features/auth/ui/screens/register_screen.dart';

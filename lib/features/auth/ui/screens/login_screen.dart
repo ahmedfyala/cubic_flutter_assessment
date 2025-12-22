@@ -14,8 +14,8 @@ import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/custom_text_form_field.dart';
 import '../../../../core/widgets/password_form_field.dart';
 import '../../../../generated/locale_keys.g.dart';
-import '../../logic/auth_cubit.dart';
-import '../../logic/auth_state.dart';
+import '../../logic/auth/auth_cubit.dart';
+import '../../logic/auth/auth_state.dart';
 import '../widgets/auth_footer.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAutoBiometric();
     });
@@ -43,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final cache = sl<CacheService>();
     final token = await cache.getToken();
 
-    
     if (token != null && cache.isBiometricEnabled()) {
       _triggerBiometric();
     }
@@ -85,7 +84,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 (route) => false,
               );
             } else if (state is AuthRegisterSuccess) {
-              
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 RouteNames.biometricSetup,
@@ -141,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     validator: AppValidator.validateLoginPassword,
                   ),
                   SizedBox(height: 48.h),
-                  
+
                   BlocBuilder<AuthCubit, AuthState>(
                     builder: (context, state) {
                       return CustomElevatedButton(

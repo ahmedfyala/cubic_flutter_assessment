@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import '../../../core/errors/error_handler.dart';
-import '../../../core/services/cache_service.dart';
-import '../data/repos/auth_repo.dart';
+import '../../../../core/errors/error_handler.dart';
+import '../../../../core/services/cache_service.dart';
+import '../../data/repos/auth_repo.dart';
 import 'auth_state.dart';
 
 @injectable
@@ -20,7 +20,6 @@ class AuthCubit extends Cubit<AuthState> {
       if (token != null) {
         await _cacheService.saveToken(token);
 
-        
         if (!_cacheService.isBiometricEnabled()) {
           emit(AuthRegisterSuccess());
         } else {
