@@ -14,17 +14,23 @@ class MapRepoImpl implements MapRepo {
   MapRepoImpl(this._remoteDataSource, this._localDataSource);
 
   @override
-  Future<List<LocationModel>> getNearestLocations(
+  Future<LocationResult> getNearestLocations(
     double userLat,
     double userLng,
   ) async {
-    List<LocationModel> allLocations = await _localDataSource
-        .getCachedLocations();
+    List<LocationModel> allLocations = [];
+    bool isFromCache = false;
 
-    if (allLocations.isEmpty) {
-      final rawData = await _remoteDataSource.fetchRawLocations();
+    try {
+      final List<dynamic> rawData = await _remoteDataSource.fetchRawLocations();
       allLocations = await compute(_parseAndConvert, rawData);
       await _localDataSource.saveLocations(allLocations);
+    } catch (e) {
+      isFromCache = true;
+      allLocations = await _localDataSource.getCachedLocations();
+      if (allLocations.isEmpty) {
+        throw Exception("No internet and no cached data found.");
+      }
     }
 
     final List<Map<String, dynamic>> safeData = allLocations
@@ -56,7 +62,7 @@ class MapRepoImpl implements MapRepo {
       ),
     );
 
-    return results;
+    return LocationResult(results, isFromCache);
   }
 }
 
@@ -72,7 +78,6 @@ List<Map<String, dynamic>> _filterNearest50InIsolate(
   final List<Map<String, dynamic>> data = params['data'];
   final double uLat = params['lat'];
   final double uLng = params['lng'];
-
   for (var item in data) {
     item['distance'] = _calculateDistance(
       uLat,
@@ -81,11 +86,9 @@ List<Map<String, dynamic>> _filterNearest50InIsolate(
       (item['lng'] as num).toDouble(),
     );
   }
-
   data.sort(
     (a, b) => (a['distance'] as double).compareTo(b['distance'] as double),
   );
-
   return data.take(50).toList();
 }
 

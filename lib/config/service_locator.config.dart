@@ -8,6 +8,7 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:cloud_firestore/cloud_firestore.dart' as _i974;
 import 'package:dio/dio.dart' as _i361;
 import 'package:firebase_auth/firebase_auth.dart' as _i59;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
@@ -29,6 +30,11 @@ import '../features/auth/data/repos/auth_repo_impl.dart' as _i353;
 import '../features/auth/logic/auth_cubit.dart' as _i329;
 import '../features/auth/logic/biometrics_cubit.dart' as _i772;
 import '../features/dashboard/logic/dashboard_cubit.dart' as _i297;
+import '../features/favorites/data/data_sources/favorites_remote_data_source.dart'
+    as _i460;
+import '../features/favorites/data/repos/favorites_repo.dart' as _i908;
+import '../features/favorites/data/repos/favorites_repo_impl.dart' as _i212;
+import '../features/favorites/logic/favorites_cubit.dart' as _i506;
 import '../features/map/data/data_sources/map_local_data_source.dart' as _i607;
 import '../features/map/data/data_sources/map_remote_data_source.dart' as _i764;
 import '../features/map/data/repos/map_repo.dart' as _i117;
@@ -56,6 +62,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i43.FirestoreService>(() => _i43.FirestoreService());
     gh.lazySingleton<_i379.BiometricService>(() => _i379.BiometricService());
     gh.lazySingleton<_i816.SecurityService>(() => _i816.SecurityService());
+    gh.lazySingleton<_i974.FirebaseFirestore>(() => registerModule.firestore);
     gh.lazySingleton<_i558.FlutterSecureStorage>(
         () => registerModule.secureStorage);
     gh.lazySingleton<_i59.FirebaseAuth>(() => registerModule.firebaseAuth);
@@ -79,6 +86,11 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i558.FlutterSecureStorage>(),
           gh<_i460.SharedPreferences>(),
         ));
+    gh.lazySingleton<_i460.FavoritesRemoteDataSource>(
+        () => _i460.FavoritesRemoteDataSourceImpl(
+              gh<_i974.FirebaseFirestore>(),
+              gh<_i59.FirebaseAuth>(),
+            ));
     gh.factory<_i772.BiometricsCubit>(() => _i772.BiometricsCubit(
           gh<_i379.BiometricService>(),
           gh<_i800.CacheService>(),
@@ -89,10 +101,14 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i899.AuthRepo>(
         () => _i353.AuthRepoImpl(gh<_i235.AuthRemoteDataSource>()));
+    gh.lazySingleton<_i908.FavoritesRepo>(
+        () => _i212.FavoritesRepoImpl(gh<_i460.FavoritesRemoteDataSource>()));
     gh.factory<_i329.AuthCubit>(() => _i329.AuthCubit(
           gh<_i899.AuthRepo>(),
           gh<_i800.CacheService>(),
         ));
+    gh.factory<_i506.FavoritesCubit>(
+        () => _i506.FavoritesCubit(gh<_i908.FavoritesRepo>()));
     return this;
   }
 }

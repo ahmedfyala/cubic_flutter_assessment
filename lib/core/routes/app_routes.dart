@@ -11,6 +11,8 @@ import '../../features/dashboard/ui/screens/dashboard_screen.dart';
 import '../../features/onboarding/ui/screens/onboarding_screen.dart';
 import '../../features/map/logic/map_cubit.dart';
 import '../../features/map/ui/screens/branches_map_screen.dart';
+import '../../features/favorites/logic/favorites_cubit.dart';
+import '../../features/favorites/ui/screens/favorites_screen.dart';
 import 'route_names.dart';
 
 class AppRoutes {
@@ -59,6 +61,14 @@ class AppRoutes {
           BlocProvider(
             create: (context) => sl<MapCubit>(),
             child: const BranchesMapScreen(),
+          ),
+        );
+
+      case RouteNames.favorites:
+        return _material(
+          BlocProvider(
+            create: (context) => sl<FavoritesCubit>(),
+            child: const FavoritesScreen(),
           ),
         );
 

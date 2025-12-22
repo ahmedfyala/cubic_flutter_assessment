@@ -1,5 +1,3 @@
-
-
 abstract class LocaleKeys {
   static const account_number = 'account_number';
   static const already_have_account = 'already_have_account';
@@ -11,6 +9,9 @@ abstract class LocaleKeys {
   static const email_address = 'email_address';
   static const email_hint = 'email_hint';
   static const expiry_date = 'expiry_date';
+  static const favorites = 'favorites';
+  static const noFavorites = 'no_favorites';
+
   static const field_required = 'field_required';
   static const find_branches = 'find_branches';
   static const full_name = 'full_name';

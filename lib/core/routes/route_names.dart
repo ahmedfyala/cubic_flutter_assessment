@@ -5,4 +5,5 @@ class RouteNames {
   static const String biometricSetup = '/biometric-setup';
   static const String dashboard = '/dashboard';
   static const String branchesMap = '/branches-map';
+  static const String favorites = '/favorites';
 }

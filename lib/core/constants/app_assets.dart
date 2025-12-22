@@ -11,4 +11,5 @@ class AppAssets {
   static const String icLock = '${_svgsBase}password_icon.svg';
 
   static const String cardBg = '${_imagesBase}card_bg.png';
+  static const String emptyState = '${_svgsBase}empty_state.svg';
 }
