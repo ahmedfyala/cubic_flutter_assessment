@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/utils/notifier.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../generated/locale_keys.g.dart';
@@ -32,6 +33,14 @@ class _LocationDetailsSheetState extends State<LocationDetailsSheet> {
   void initState() {
     super.initState();
     _isFavorite = widget.initialIsFavorite;
+  }
+
+  Future<void> _navigateToBranch() async {
+    final url =
+        'https://www.google.com/maps/search/?api=1&query=${widget.location.lat},${widget.location.lng}';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    }
   }
 
   @override
@@ -100,6 +109,18 @@ class _LocationDetailsSheetState extends State<LocationDetailsSheet> {
                   ],
                 ),
               ),
+              IconButton(
+                onPressed: _navigateToBranch,
+                icon: CircleAvatar(
+                  backgroundColor: colorScheme.primary,
+                  radius: 20.r,
+                  child: const Icon(
+                    Icons.directions,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+              ),
             ],
           ),
           SizedBox(height: 24.h),
@@ -166,11 +187,6 @@ class _LocationDetailsSheetState extends State<LocationDetailsSheet> {
                       Navigator.pop(context);
                     } else {
                       setState(() => _isLoading = false);
-                      Notifier.show(
-                        context: context,
-                        message: LocaleKeys.operation_failed.tr(),
-                        type: NotificationType.toast,
-                      );
                     }
                   },
           ),

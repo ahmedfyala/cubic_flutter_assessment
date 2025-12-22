@@ -20,6 +20,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (token != null) {
         await _cacheService.saveToken(token);
 
+        
         if (!_cacheService.isBiometricEnabled()) {
           emit(AuthRegisterSuccess());
         } else {
@@ -47,11 +48,8 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     try {
-      
-      await _authRepo.logout(); 
-      
+      await _authRepo.logout();
       await _cacheService.clearAuthData();
-      
       emit(AuthInitial());
     } catch (e) {
       emit(AuthError("Logout failed"));

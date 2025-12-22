@@ -14,6 +14,7 @@ class MapCubit extends Cubit<MapState> {
   final LocationService _locationService;
   final FirestoreService _firestoreService;
 
+  
   final Set<String> _favoritesCache = {};
 
   MapCubit(this._mapRepo, this._locationService, this._firestoreService)
@@ -27,7 +28,6 @@ class MapCubit extends Cubit<MapState> {
       final double lng = userLocation.longitude ?? 31.2357;
 
       final result = await _mapRepo.getNearestLocations(lat, lng);
-
       final markers = _buildMarkers(result.locations, onMarkerTap);
 
       emit(
@@ -54,18 +54,13 @@ class MapCubit extends Cubit<MapState> {
         markerId: MarkerId(loc.id),
         position: LatLng(loc.lat, loc.lng),
         onTap: loc.isActive ? () => onMarkerTap(loc) : null,
-        infoWindow: loc.isActive
-            ? InfoWindow.noText
-            : InfoWindow(title: loc.name, snippet: loc.address),
         icon: BitmapDescriptor.defaultMarkerWithHue(_getMarkerColor(loc)),
       );
     }).toSet();
   }
 
   double _getMarkerColor(LocationModel loc) {
-    if (loc.isActive) {
-      return BitmapDescriptor.hueViolet;
-    }
+    if (loc.isActive) return BitmapDescriptor.hueViolet;
     return loc.type == 'BRANCH'
         ? BitmapDescriptor.hueAzure
         : BitmapDescriptor.hueRed;
@@ -91,18 +86,23 @@ class MapCubit extends Cubit<MapState> {
     }
   }
 
+  
   Future<bool> checkIsFavorite(String locationId) async {
-    if (_favoritesCache.contains(locationId)) {
-      return true;
-    }
     try {
+      
       final isFav = await _firestoreService.isFavorite(locationId);
+
+      
       if (isFav) {
         _favoritesCache.add(locationId);
+      } else {
+        _favoritesCache.remove(locationId);
       }
+
       return isFav;
     } catch (_) {
-      return false;
+      
+      return _favoritesCache.contains(locationId);
     }
   }
 }

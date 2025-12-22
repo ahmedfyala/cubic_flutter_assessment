@@ -20,7 +20,6 @@ class BranchesMapScreen extends StatefulWidget {
 class _BranchesMapScreenState extends State<BranchesMapScreen> {
   bool _isBottomSheetOpen = false;
   bool _isMapReady = false;
-
   GoogleMapController? _mapController;
 
   @override
@@ -44,8 +43,10 @@ class _BranchesMapScreenState extends State<BranchesMapScreen> {
       isFav = await context
           .read<MapCubit>()
           .checkIsFavorite(loc.id)
-          .timeout(const Duration(seconds: 2));
-    } catch (_) {}
+          .timeout(const Duration(milliseconds: 1500));
+    } catch (_) {
+      isFav = false;
+    }
 
     if (!mounted) return;
 
@@ -59,7 +60,9 @@ class _BranchesMapScreenState extends State<BranchesMapScreen> {
         onAdd: () => context.read<MapCubit>().addToFavorites(loc),
         onRemove: () => context.read<MapCubit>().removeFromFavorites(loc.id),
       ),
-    ).whenComplete(() => _isBottomSheetOpen = false);
+    ).whenComplete(() {
+      _isBottomSheetOpen = false;
+    });
   }
 
   @override
@@ -81,6 +84,7 @@ class _BranchesMapScreenState extends State<BranchesMapScreen> {
               context: context,
               message: LocaleKeys.offline_cached_msg.tr(),
               type: NotificationType.toast,
+              bgColor: Colors.orange,
             );
           }
         },

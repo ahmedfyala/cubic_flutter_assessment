@@ -1,3 +1,5 @@
+import 'dart:ui';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -14,40 +16,33 @@ import 'features/map/data/models/location_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   await EasyLocalization.ensureInitialized();
   await ScreenUtil.ensureScreenSize();
 
+  
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+
   await setupServiceLocator();
   await Hive.initFlutter();
-  if (!Hive.isAdapterRegistered(0)) {
+  if (!Hive.isAdapterRegistered(0))
     Hive.registerAdapter(LocationModelAdapter());
-  }
 
   final securityService = sl<SecurityService>();
   await securityService.preventScreenshots();
 
   final cacheService = sl<CacheService>();
-  String initialRoute;
-
-  if (!cacheService.isOnboardingDone()) {
-    initialRoute = RouteNames.splash;
-  } else {
-    final token = await cacheService.getToken();
-    final isBiometricEnabled = cacheService.isBiometricEnabled();
-
-    if (token != null) {
-      if (isBiometricEnabled) {
-        initialRoute = RouteNames.login;
-      } else {
-        initialRoute = RouteNames.dashboard;
-      }
-    } else {
-      initialRoute = RouteNames.login;
-    }
-  }
+  String initialRoute = !cacheService.isOnboardingDone()
+      ? RouteNames.splash
+      : (await cacheService.getToken() != null
+            ? (cacheService.isBiometricEnabled()
+                  ? RouteNames.login
+                  : RouteNames.dashboard)
+            : RouteNames.login);
 
   runApp(
     EasyLocalization(

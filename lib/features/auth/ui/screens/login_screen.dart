@@ -34,23 +34,28 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _handleBiometricLogin();
+      _checkAutoBiometric();
     });
   }
 
-  Future<void> _handleBiometricLogin() async {
+  Future<void> _checkAutoBiometric() async {
     final cache = sl<CacheService>();
-    final biometric = sl<BiometricService>();
+    final token = await cache.getToken();
 
-    if (cache.isBiometricEnabled()) {
-      final authenticated = await biometric.authenticate();
-      if (authenticated && mounted) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          RouteNames.dashboard,
-          (route) => false,
-        );
-      }
+    if (token != null && cache.isBiometricEnabled()) {
+      _triggerBiometric();
+    }
+  }
+
+  Future<void> _triggerBiometric() async {
+    final biometric = sl<BiometricService>();
+    final authenticated = await biometric.authenticate();
+    if (authenticated && mounted) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        RouteNames.dashboard,
+        (route) => false,
+      );
     }
   }
 
@@ -78,7 +83,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 (route) => false,
               );
             } else if (state is AuthRegisterSuccess) {
-              
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 RouteNames.biometricSetup,
@@ -134,49 +138,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     validator: AppValidator.validateLoginPassword,
                   ),
                   SizedBox(height: 48.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: BlocBuilder<AuthCubit, AuthState>(
-                          builder: (context, state) {
-                            return CustomElevatedButton(
-                              text: LocaleKeys.sign_in.tr(),
-                              isLoading: state is AuthLoading,
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  context.read<AuthCubit>().login(
-                                    _emailController.text.trim(),
-                                    _passwordController.text,
-                                  );
-                                }
-                              },
+                  BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      return CustomElevatedButton(
+                        text: LocaleKeys.sign_in.tr(),
+                        isLoading: state is AuthLoading,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<AuthCubit>().login(
+                              _emailController.text.trim(),
+                              _passwordController.text,
                             );
-                          },
-                        ),
-                      ),
-                      if (sl<CacheService>().isBiometricEnabled()) ...[
-                        SizedBox(width: 16.w),
-                        GestureDetector(
-                          onTap: _handleBiometricLogin,
-                          child: Container(
-                            height: 52.h,
-                            width: 52.h,
-                            decoration: BoxDecoration(
-                              color: colorScheme.primary.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(
-                                color: colorScheme.primary.withOpacity(0.2),
-                              ),
-                            ),
-                            child: Icon(
-                              Icons.fingerprint,
-                              color: colorScheme.primary,
-                              size: 30.sp,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
+                          }
+                        },
+                      );
+                    },
                   ),
                   SizedBox(height: 32.h),
                   AuthFooter(

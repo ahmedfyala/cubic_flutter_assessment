@@ -51,11 +51,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       DashboardHeader(
                         userName: state.userName,
                         onLogoutTap: () async {
+                          
                           await context.read<AuthCubit>().logout();
                           if (context.mounted) {
-                            Navigator.pushReplacementNamed(
+                            
+                            Navigator.pushNamedAndRemoveUntil(
                               context,
                               RouteNames.login,
+                              (route) => false,
                             );
                           }
                         },
