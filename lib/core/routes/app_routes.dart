@@ -9,6 +9,8 @@ import '../../features/auth/ui/screens/register_screen.dart';
 import '../../features/dashboard/logic/dashboard_cubit.dart';
 import '../../features/dashboard/ui/screens/dashboard_screen.dart';
 import '../../features/onboarding/ui/screens/onboarding_screen.dart';
+import '../../features/map/logic/map_cubit.dart';
+import '../../features/map/ui/screens/branches_map_screen.dart';
 import 'route_names.dart';
 
 class AppRoutes {
@@ -51,9 +53,13 @@ class AppRoutes {
             child: const DashboardScreen(),
           ),
         );
+
       case RouteNames.branchesMap:
         return _material(
-          const Scaffold(body: Center(child: Text('Branches Map Screen'))),
+          BlocProvider(
+            create: (context) => sl<MapCubit>(),
+            child: const BranchesMapScreen(),
+          ),
         );
 
       default:

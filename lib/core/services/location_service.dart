@@ -1,37 +1,43 @@
-import 'package:location/location.dart';
+import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class LocationService {
-  final Location _location = Location();
+  final loc.Location _location = loc.Location();
 
-  Future<LocationData> getCurrentLocation() async {
-    await _handlePermission();
-    await _ensureServiceEnabled();
-    return await _location.getLocation();
-  }
+  Future<loc.LocationData> getCurrentLocation() async {
+    bool serviceEnabled;
+    PermissionStatus permissionStatus;
 
-  Future<void> _handlePermission() async {
-    final status = await Permission.location.status;
+    // 1. التأكد من أن خدمة الـ GPS مفعلة في الجهاز
+    serviceEnabled = await _location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await _location.requestService();
+      if (!serviceEnabled) {
+        throw Exception('Location services are disabled. Please enable GPS.');
+      }
+    }
 
-    if (status.isDenied) {
-      final result = await Permission.location.request();
-      if (!result.isGranted) {
+    // 2. التحقق من صلاحيات التطبيق باستخدام permission_handler لضمان دقة أعلى
+    permissionStatus = await Permission.locationWhenInUse.status;
+
+    if (permissionStatus.isDenied) {
+      permissionStatus = await Permission.locationWhenInUse.request();
+      if (permissionStatus.isDenied) {
         throw Exception('Location permission denied');
       }
     }
 
-    if (status.isPermanentlyDenied) {
-      throw Exception('Location permission permanently denied');
+    if (permissionStatus.isPermanentlyDenied) {
+      // إذا رفض المستخدم الصلاحية نهائياً، نوجهه للإعدادات
+      await openAppSettings();
+      throw Exception(
+        'Location permission is permanently denied. Please enable it from settings.',
+      );
     }
-  }
 
-  Future<void> _ensureServiceEnabled() async {
-    bool enabled = await _location.serviceEnabled();
-    if (!enabled) {
-      enabled = await _location.requestService();
-      if (!enabled) {
-        throw Exception('Location service disabled');
-      }
-    }
+    // 3. جلب الإحداثيات
+    return await _location.getLocation();
   }
 }

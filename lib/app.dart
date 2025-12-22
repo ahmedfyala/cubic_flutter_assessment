@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           initialRoute: initialRoute,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.dark, 
+          themeMode: ThemeMode.dark,
         );
       },
     );

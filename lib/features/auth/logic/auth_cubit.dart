@@ -15,16 +15,32 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> login(String email, String password) async {
     emit(AuthLoading());
     try {
+      print("Starting Firebase Auth for: $email");
       final credential = await _authRepo.login(email, password);
+
       final token = credential.user?.uid;
       if (token != null) {
-        await _cacheService.saveToken(token);
+        print("Firebase Auth Success. UID: $token");
+
+        try {
+          print("Attempting to save token to SecureStorage...");
+          await _cacheService.saveToken(token);
+          print("Token saved successfully.");
+        } catch (storageError) {
+          print("CRITICAL: SecureStorage failed: $storageError");
+          // في حال فشل التخزين (مشكلة شائعة في المحاكي)، سنكمل العملية لكي لا يعلق التطبيق
+        }
+
+        emit(AuthSuccess());
+      } else {
+        emit(AuthError("User ID not found."));
       }
-      emit(AuthSuccess());
     } on FirebaseAuthException catch (e) {
+      print("Firebase Login Error Code: ${e.code}");
       emit(AuthError(_mapFirebaseError(e.code)));
     } catch (e) {
-      emit(AuthError("An unexpected error occurred"));
+      print("General Login Error: $e");
+      emit(AuthError("An unexpected error occurred."));
     }
   }
 
@@ -36,7 +52,7 @@ class AuthCubit extends Cubit<AuthState> {
     } on FirebaseAuthException catch (e) {
       emit(AuthError(_mapFirebaseError(e.code)));
     } catch (e) {
-      emit(AuthError("Registration failed"));
+      emit(AuthError("Registration failed."));
     }
   }
 
@@ -49,15 +65,13 @@ class AuthCubit extends Cubit<AuthState> {
   String _mapFirebaseError(String code) {
     switch (code) {
       case 'user-not-found':
-        return 'No user found with this email.';
       case 'wrong-password':
+      case 'invalid-credential':
         return 'Invalid email or password.';
-      case 'email-already-in-use':
-        return 'This email is already registered.';
-      case 'weak-password':
-        return 'The password provided is too weak.';
-      case 'invalid-email':
-        return 'The email address is badly formatted.';
+      case 'user-disabled':
+        return 'This account has been disabled.';
+      case 'network-request-failed':
+        return 'Check your internet connection.';
       default:
         return 'Authentication failed. Please try again.';
     }
