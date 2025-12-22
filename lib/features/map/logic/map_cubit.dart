@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
+import '../../../core/errors/error_handler.dart';
 import '../../../core/services/location_service.dart';
 import '../../../core/services/firestore_service.dart';
 import '../data/repos/map_repo.dart';
@@ -12,6 +13,7 @@ class MapCubit extends Cubit<MapState> {
   final MapRepo _mapRepo;
   final LocationService _locationService;
   final FirestoreService _firestoreService;
+
   final Set<String> _favoritesCache = {};
 
   MapCubit(this._mapRepo, this._locationService, this._firestoreService)
@@ -26,7 +28,6 @@ class MapCubit extends Cubit<MapState> {
 
       final result = await _mapRepo.getNearestLocations(lat, lng);
 
-      // بناء الماركرز مع منطق الشرط المطلوب
       final markers = _buildMarkers(result.locations, onMarkerTap);
 
       emit(
@@ -39,7 +40,8 @@ class MapCubit extends Cubit<MapState> {
         ),
       );
     } catch (e) {
-      emit(MapError(message: e.toString()));
+      final failure = ErrorHandler.handle(e);
+      emit(MapError(message: failure.message));
     }
   }
 
@@ -51,19 +53,22 @@ class MapCubit extends Cubit<MapState> {
       return Marker(
         markerId: MarkerId(loc.id),
         position: LatLng(loc.lat, loc.lng),
-        // إذا كان نشط، نستخدم الـ Callback لفتح الشيت، وإلا نترك الـ onTap فارغاً ليظهر الـ InfoWindow
         onTap: loc.isActive ? () => onMarkerTap(loc) : null,
-        // إظهار الفقاعة العلوية فقط للفروع غير النشطة كما طلبت
         infoWindow: loc.isActive
             ? InfoWindow.noText
             : InfoWindow(title: loc.name, snippet: loc.address),
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-          loc.type == 'BRANCH'
-              ? BitmapDescriptor.hueAzure
-              : BitmapDescriptor.hueRed,
-        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(_getMarkerColor(loc)),
       );
     }).toSet();
+  }
+
+  double _getMarkerColor(LocationModel loc) {
+    if (loc.isActive) {
+      return BitmapDescriptor.hueViolet;
+    }
+    return loc.type == 'BRANCH'
+        ? BitmapDescriptor.hueAzure
+        : BitmapDescriptor.hueRed;
   }
 
   Future<bool> addToFavorites(LocationModel location) async {
@@ -71,7 +76,8 @@ class MapCubit extends Cubit<MapState> {
       await _firestoreService.addToFavorites(location);
       _favoritesCache.add(location.id);
       return true;
-    } catch (_) {
+    } catch (e) {
+      print("Error adding to favorites: $e");
       return false;
     }
   }
@@ -81,16 +87,21 @@ class MapCubit extends Cubit<MapState> {
       await _firestoreService.removeFromFavorites(locationId);
       _favoritesCache.remove(locationId);
       return true;
-    } catch (_) {
+    } catch (e) {
+      print("Error removing from favorites: $e");
       return false;
     }
   }
 
   Future<bool> checkIsFavorite(String locationId) async {
-    if (_favoritesCache.contains(locationId)) return true;
+    if (_favoritesCache.contains(locationId)) {
+      return true;
+    }
     try {
       final isFav = await _firestoreService.isFavorite(locationId);
-      if (isFav) _favoritesCache.add(locationId);
+      if (isFav) {
+        _favoritesCache.add(locationId);
+      }
       return isFav;
     } catch (_) {
       return false;

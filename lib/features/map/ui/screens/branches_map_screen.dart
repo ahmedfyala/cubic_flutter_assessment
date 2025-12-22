@@ -10,16 +10,22 @@ import '../widgets/map_skeleton_view.dart';
 
 class BranchesMapScreen extends StatefulWidget {
   const BranchesMapScreen({super.key});
+
   @override
   State<BranchesMapScreen> createState() => _BranchesMapScreenState();
 }
 
 class _BranchesMapScreenState extends State<BranchesMapScreen> {
   bool _isBottomSheetOpen = false;
+  GoogleMapController? _mapController;
 
   @override
   void initState() {
     super.initState();
+    _fetchData();
+  }
+
+  void _fetchData() {
     context.read<MapCubit>().getNearestBranches(
       (location) => _handleMarkerTap(location),
     );
@@ -77,7 +83,9 @@ class _BranchesMapScreenState extends State<BranchesMapScreen> {
         child: BlocBuilder<MapCubit, MapState>(
           builder: (context, state) {
             return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 600),
+              duration: const Duration(milliseconds: 800),
+              transitionBuilder: (child, animation) =>
+                  FadeTransition(opacity: animation, child: child),
               child: _buildContent(state),
             );
           },
@@ -87,22 +95,36 @@ class _BranchesMapScreenState extends State<BranchesMapScreen> {
   }
 
   Widget _buildContent(MapState state) {
-    if (state is MapLoading)
-      return const MapSkeletonView(key: ValueKey('skeleton'));
+    if (state is MapLoading) {
+      return const MapSkeletonView(key: ValueKey('skeleton_view'));
+    }
+
     if (state is MapSuccess) {
       return GoogleMap(
-        key: const ValueKey('map_actual'),
+        key: const ValueKey('actual_map_view'),
         initialCameraPosition: CameraPosition(
           target: LatLng(state.userLat, state.userLng),
-          zoom: 13,
+          zoom: 14,
         ),
         myLocationEnabled: true,
+        myLocationButtonEnabled: true,
         markers: state.markers,
         zoomControlsEnabled: false,
+
+        onMapCreated: (controller) => _mapController = controller,
       );
     }
-    if (state is MapError)
-      return Center(key: const ValueKey('error'), child: Text(state.message));
+
+    if (state is MapError) {
+      return Center(
+        key: const ValueKey('error_view'),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Text(state.message, textAlign: TextAlign.center),
+        ),
+      );
+    }
+
     return const SizedBox.shrink();
   }
 }

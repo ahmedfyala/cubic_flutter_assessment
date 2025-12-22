@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import '../../../core/errors/error_handler.dart';
 import '../../../core/services/cache_service.dart';
 import '../data/repos/auth_repo.dart';
 import 'auth_state.dart';
@@ -15,32 +15,17 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> login(String email, String password) async {
     emit(AuthLoading());
     try {
-      print("Starting Firebase Auth for: $email");
       final credential = await _authRepo.login(email, password);
-
       final token = credential.user?.uid;
       if (token != null) {
-        print("Firebase Auth Success. UID: $token");
-
-        try {
-          print("Attempting to save token to SecureStorage...");
-          await _cacheService.saveToken(token);
-          print("Token saved successfully.");
-        } catch (storageError) {
-          print("CRITICAL: SecureStorage failed: $storageError");
-          // في حال فشل التخزين (مشكلة شائعة في المحاكي)، سنكمل العملية لكي لا يعلق التطبيق
-        }
-
+        await _cacheService.saveToken(token);
         emit(AuthSuccess());
       } else {
-        emit(AuthError("User ID not found."));
+        emit(AuthError("User ID not found"));
       }
-    } on FirebaseAuthException catch (e) {
-      print("Firebase Login Error Code: ${e.code}");
-      emit(AuthError(_mapFirebaseError(e.code)));
     } catch (e) {
-      print("General Login Error: $e");
-      emit(AuthError("An unexpected error occurred."));
+      final failure = ErrorHandler.handle(e);
+      emit(AuthError(failure.message));
     }
   }
 
@@ -49,31 +34,14 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await _authRepo.register(email, password, name);
       emit(AuthRegisterSuccess());
-    } on FirebaseAuthException catch (e) {
-      emit(AuthError(_mapFirebaseError(e.code)));
     } catch (e) {
-      emit(AuthError("Registration failed."));
+      final failure = ErrorHandler.handle(e);
+      emit(AuthError(failure.message));
     }
   }
 
   Future<void> logout() async {
     await _cacheService.clearAuthData();
-    await FirebaseAuth.instance.signOut();
     emit(AuthInitial());
-  }
-
-  String _mapFirebaseError(String code) {
-    switch (code) {
-      case 'user-not-found':
-      case 'wrong-password':
-      case 'invalid-credential':
-        return 'Invalid email or password.';
-      case 'user-disabled':
-        return 'This account has been disabled.';
-      case 'network-request-failed':
-        return 'Check your internet connection.';
-      default:
-        return 'Authentication failed. Please try again.';
-    }
   }
 }
