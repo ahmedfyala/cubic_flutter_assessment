@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/notifier.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
+import '../../../../generated/locale_keys.g.dart';
 import '../../data/models/location_model.dart';
 
 class LocationDetailsSheet extends StatefulWidget {
@@ -103,14 +105,14 @@ class _LocationDetailsSheetState extends State<LocationDetailsSheet> {
           SizedBox(height: 24.h),
           _buildInfoSection(
             Icons.location_on_outlined,
-            'Address',
+            LocaleKeys.address_label.tr(),
             widget.location.address,
           ),
           if (widget.location.workingHours != null) ...[
             SizedBox(height: 16.h),
             _buildInfoSection(
               Icons.access_time,
-              'Working Hours',
+              LocaleKeys.working_hours_label.tr(),
               widget.location.workingHours!,
             ),
           ],
@@ -118,7 +120,7 @@ class _LocationDetailsSheetState extends State<LocationDetailsSheet> {
               widget.location.services!.isNotEmpty) ...[
             SizedBox(height: 20.h),
             Text(
-              'Services',
+              LocaleKeys.services_label.tr(),
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
@@ -137,8 +139,10 @@ class _LocationDetailsSheetState extends State<LocationDetailsSheet> {
           SizedBox(height: 30.h),
           CustomElevatedButton(
             isLoading: _isLoading,
-            color: _isFavorite ? Colors.redAccent : colorScheme.primary,
-            text: _isFavorite ? 'Remove from Favorites' : 'Add to Favorites',
+            color: _isFavorite ? colorScheme.error : colorScheme.primary,
+            text: _isFavorite
+                ? LocaleKeys.remove_from_favorites.tr()
+                : LocaleKeys.add_to_favorites.tr(),
             onPressed: _isLoading
                 ? null
                 : () async {
@@ -155,8 +159,8 @@ class _LocationDetailsSheetState extends State<LocationDetailsSheet> {
                       Notifier.show(
                         context: context,
                         message: _isFavorite
-                            ? 'Added to favorites successfully'
-                            : 'Removed from favorites',
+                            ? LocaleKeys.added_to_fav_success.tr()
+                            : LocaleKeys.removed_from_fav_success.tr(),
                         type: NotificationType.toast,
                       );
                       Navigator.pop(context);
@@ -164,7 +168,7 @@ class _LocationDetailsSheetState extends State<LocationDetailsSheet> {
                       setState(() => _isLoading = false);
                       Notifier.show(
                         context: context,
-                        message: 'Operation failed',
+                        message: LocaleKeys.operation_failed.tr(),
                         type: NotificationType.toast,
                       );
                     }
@@ -206,7 +210,7 @@ class _LocationDetailsSheetState extends State<LocationDetailsSheet> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceVariant.withOpacity(0.3),
+        color: colorScheme.primary.withOpacity(0.05),
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
       ),

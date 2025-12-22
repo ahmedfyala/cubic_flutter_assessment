@@ -1,17 +1,26 @@
+// DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
+
 abstract class LocaleKeys {
+  static const account_created_signin = 'account_created_signin';
   static const account_number = 'account_number';
+  static const add_to_favorites = 'add_to_favorites';
+  static const added_to_fav_success = 'added_to_fav_success';
+  static const address_label = 'address_label';
   static const already_have_account = 'already_have_account';
+  static const auth_failed = 'auth_failed';
   static const balance = 'balance';
+  static const biometric_authentication = 'biometric_authentication';
+  static const biometric_setup_desc = 'biometric_setup_desc';
+  static const biometrics_not_supported = 'biometrics_not_supported';
   static const confirm_password = 'confirm_password';
   static const confirm_password_hint = 'confirm_password_hint';
   static const current_balance = 'current_balance';
   static const cvv = 'cvv';
   static const email_address = 'email_address';
   static const email_hint = 'email_hint';
+  static const enable_biometrics = 'enable_biometrics';
   static const expiry_date = 'expiry_date';
   static const favorites = 'favorites';
-  static const noFavorites = 'no_favorites';
-
   static const field_required = 'field_required';
   static const find_branches = 'find_branches';
   static const full_name = 'full_name';
@@ -20,23 +29,36 @@ abstract class LocaleKeys {
   static const invalid_name = 'invalid_name';
   static const invalid_password = 'invalid_password';
   static const login_error = 'login_error';
+  static const maybe_later = 'maybe_later';
   static const my_cards = 'my_cards';
+  static const my_favorites_title = 'my_favorites_title';
+  static const nearby_branches = 'nearby_branches';
   static const new_user_q = 'new_user_q';
   static const next = 'next';
+  static const no_favorites = 'no_favorites';
+  static const offline_cached_msg = 'offline_cached_msg';
   static const onboarding_desc_1 = 'onboarding_desc_1';
   static const onboarding_desc_2 = 'onboarding_desc_2';
   static const onboarding_desc_3 = 'onboarding_desc_3';
   static const onboarding_title_1 = 'onboarding_title_1';
   static const onboarding_title_2 = 'onboarding_title_2';
   static const onboarding_title_3 = 'onboarding_title_3';
+  static const operation_failed = 'operation_failed';
   static const password = 'password';
   static const password_complexity_error = 'password_complexity_error';
   static const password_hint = 'password_hint';
   static const passwords_dont_match = 'passwords_dont_match';
   static const recent_transactions = 'recent_transactions';
   static const register_error = 'register_error';
+  static const remove_from_favorites = 'remove_from_favorites';
+  static const removed_from_fav_success = 'removed_from_fav_success';
+  static const security_enabled = 'security_enabled';
   static const see_all = 'see_all';
+  static const services_label = 'services_label';
   static const sign_in = 'sign_in';
   static const sign_up = 'sign_up';
   static const skip = 'skip';
+  static const user_id_not_found = 'user_id_not_found';
+  static const welcome_back = 'welcome_back';
+  static const working_hours_label = 'working_hours_label';
 }

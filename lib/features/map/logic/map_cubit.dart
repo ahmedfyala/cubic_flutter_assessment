@@ -77,7 +77,6 @@ class MapCubit extends Cubit<MapState> {
       _favoritesCache.add(location.id);
       return true;
     } catch (e) {
-      print("Error adding to favorites: $e");
       return false;
     }
   }
@@ -88,7 +87,6 @@ class MapCubit extends Cubit<MapState> {
       _favoritesCache.remove(locationId);
       return true;
     } catch (e) {
-      print("Error removing from favorites: $e");
       return false;
     }
   }

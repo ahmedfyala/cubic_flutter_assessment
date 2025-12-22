@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/routes/route_names.dart';
 import '../../../../core/utils/notifier.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
+import '../../../../generated/locale_keys.g.dart';
 import '../../logic/biometrics_cubit.dart';
 
 class BiometricSetupScreen extends StatelessWidget {
@@ -19,7 +20,7 @@ class BiometricSetupScreen extends StatelessWidget {
           if (state is BiometricsSuccess) {
             Notifier.show(
               context: context,
-              message: "Security Enabled!",
+              message: LocaleKeys.security_enabled.tr(),
               snackBarType: SnackBarType.success,
             );
             Navigator.pushReplacementNamed(context, RouteNames.dashboard);
@@ -44,7 +45,7 @@ class BiometricSetupScreen extends StatelessWidget {
               ),
               SizedBox(height: 40.h),
               Text(
-                "Biometric Authentication",
+                LocaleKeys.biometric_authentication.tr(),
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -52,7 +53,7 @@ class BiometricSetupScreen extends StatelessWidget {
               ),
               SizedBox(height: 16.h),
               Text(
-                "Use Face ID or Touch ID for faster and secure access to your account in the future.",
+                LocaleKeys.biometric_setup_desc.tr(),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.outline,
                 ),
@@ -60,7 +61,7 @@ class BiometricSetupScreen extends StatelessWidget {
               ),
               const Spacer(),
               CustomElevatedButton(
-                text: "Enable Biometrics",
+                text: LocaleKeys.enable_biometrics.tr(),
                 onPressed: () =>
                     context.read<BiometricsCubit>().enableBiometrics(),
               ),
@@ -70,7 +71,7 @@ class BiometricSetupScreen extends StatelessWidget {
                   RouteNames.dashboard,
                 ),
                 child: Text(
-                  "Maybe Later",
+                  LocaleKeys.maybe_later.tr(),
                   style: TextStyle(color: theme.colorScheme.outline),
                 ),
               ),

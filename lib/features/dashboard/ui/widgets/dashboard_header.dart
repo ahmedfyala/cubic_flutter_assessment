@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../generated/locale_keys.g.dart';
 
 class DashboardHeader extends StatelessWidget {
   final String userName;
@@ -22,7 +24,7 @@ class DashboardHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Welcome back,",
+              LocaleKeys.welcome_back.tr(),
               style: TextStyle(
                 color: colorScheme.onSurface.withOpacity(0.5),
                 fontSize: 14.sp,

@@ -29,7 +29,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  
   AutovalidateMode _autoValidate = AutovalidateMode.disabled;
 
   @override
@@ -54,7 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             if (state is AuthRegisterSuccess) {
               Notifier.show(
                 context: context,
-                message: "Account Created! Please Sign In",
+                message: LocaleKeys.account_created_signin.tr(),
                 type: NotificationType.toast,
               );
               Navigator.pop(context);
@@ -70,7 +69,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: Form(
               key: _formKey,
-              autovalidateMode: _autoValidate, 
+              autovalidateMode: _autoValidate,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -152,11 +151,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         text: LocaleKeys.sign_up.tr(),
                         isLoading: state is AuthLoading,
                         onPressed: () {
-                          
                           setState(() {
                             _autoValidate = AutovalidateMode.onUserInteraction;
                           });
-
                           if (_formKey.currentState!.validate()) {
                             context.read<AuthCubit>().register(
                               _emailController.text.trim(),
