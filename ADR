@@ -1,0 +1,13 @@
+Architecture Decision Record (ADR) - Cubic Flutter Assessment
+1. Data Security (Encryption at Rest):
+Choice: Hive with AES Encryption + Flutter Secure Storage.
+Reason: To satisfy the requirement that data remains unreadable even on rooted devices. The encryption key is generated via Hive.generateSecureKey() and stored in the device's hardware-backed KeyStore/Keychain using FlutterSecureStorage.
+2. High Performance (Large Dataset Processing):
+Choice: Dart Isolates (compute function).
+Reason: Processing 10,000+ JSON objects (4MB+) and calculating geographical distances (Haversine formula) on the main thread causes UI jank. By offloading parsing and filtering to background Isolates, we maintain a smooth 60fps experience.
+3. Map Visualization:
+Choice: Nearest 50 Filtering.
+Reason: Rendering 10,000 markers on Google Maps significantly degrades performance. We implemented a distance-based sort to only show the relevant 50 locations to the user.
+4. State Management:
+Choice: Flutter BLoC/Cubit.
+Reason: Provides a clean separation between UI and business logic, which is essential for a scalable and testable banking application.

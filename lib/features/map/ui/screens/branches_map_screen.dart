@@ -65,7 +65,7 @@ class _BranchesMapScreenState extends State<BranchesMapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nearby Branches & ATMs'),
+        title: const Text('Nearby Branches'),
         actions: [
           IconButton(
             icon: const Icon(Icons.favorite_rounded),
@@ -103,7 +103,7 @@ class _BranchesMapScreenState extends State<BranchesMapScreen> {
                     zoomControlsEnabled: false,
                     markers: state.markers,
 
-                    /// مهم جدًا
+                    
                     cameraTargetBounds: CameraTargetBounds(
                       LatLngBounds(
                         southwest: LatLng(
@@ -120,7 +120,7 @@ class _BranchesMapScreenState extends State<BranchesMapScreen> {
                     onMapCreated: (controller) async {
                       _mapController = controller;
 
-                      /// ثبت الكاميرا فورًا
+                      
                       await controller.moveCamera(
                         CameraUpdate.newLatLngZoom(
                           LatLng(state.userLat, state.userLng),
@@ -128,7 +128,7 @@ class _BranchesMapScreenState extends State<BranchesMapScreen> {
                         ),
                       );
 
-                      /// سيب وقت بسيط لتحميل tiles
+                      
                       await Future.delayed(const Duration(milliseconds: 300));
 
                       if (!mounted) return;
@@ -136,7 +136,7 @@ class _BranchesMapScreenState extends State<BranchesMapScreen> {
                     },
                   ),
 
-                  /// ===== Skeleton فوق الماب
+                  
                   AnimatedOpacity(
                     duration: const Duration(milliseconds: 400),
                     opacity: _isMapReady ? 0 : 1,
