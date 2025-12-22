@@ -5,8 +5,10 @@ import '../../features/map/data/models/location_model.dart';
 
 @lazySingleton
 class FirestoreService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
+
+  FirestoreService(this._firestore, this._auth);
 
   Future<void> addToFavorites(LocationModel location) async {
     final user = _auth.currentUser;

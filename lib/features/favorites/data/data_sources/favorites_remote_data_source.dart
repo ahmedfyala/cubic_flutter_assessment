@@ -17,7 +17,9 @@ class FavoritesRemoteDataSourceImpl implements FavoritesRemoteDataSource {
 
   @override
   Future<List<FavoriteBranchModel>> getFavorites() async {
-    final user = _auth.currentUser!;
+    final user = _auth.currentUser;
+    if (user == null) return [];
+
     final snapshot = await _firestore
         .collection('users')
         .doc(user.uid)
@@ -31,7 +33,9 @@ class FavoritesRemoteDataSourceImpl implements FavoritesRemoteDataSource {
 
   @override
   Future<void> removeFavorite(String id) async {
-    final user = _auth.currentUser!;
+    final user = _auth.currentUser;
+    if (user == null) return;
+
     await _firestore
         .collection('users')
         .doc(user.uid)

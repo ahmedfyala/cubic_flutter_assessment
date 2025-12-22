@@ -4,13 +4,26 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
+import 'package:location/location.dart' as loc;
+import 'package:local_auth/local_auth.dart';
 
 @module
 abstract class RegisterModule {
   @preResolve
   Future<SharedPreferences> get sharedPrefs => SharedPreferences.getInstance();
+
   @lazySingleton
   FirebaseFirestore get firestore => FirebaseFirestore.instance;
+
+  @lazySingleton
+  FirebaseAuth get firebaseAuth => FirebaseAuth.instance;
+
+  @lazySingleton
+  loc.Location get location => loc.Location();
+
+  @lazySingleton
+  LocalAuthentication get localAuth => LocalAuthentication();
+
   @lazySingleton
   FlutterSecureStorage get secureStorage => const FlutterSecureStorage(
     aOptions: AndroidOptions(
@@ -18,9 +31,6 @@ abstract class RegisterModule {
       resetOnError: true,
     ),
   );
-
-  @lazySingleton
-  FirebaseAuth get firebaseAuth => FirebaseAuth.instance;
 
   @lazySingleton
   Dio get dio => Dio(

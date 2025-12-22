@@ -3,7 +3,9 @@ import 'package:injectable/injectable.dart';
 
 @lazySingleton
 class BiometricService {
-  final LocalAuthentication _auth = LocalAuthentication();
+  final LocalAuthentication _auth;
+
+  BiometricService(this._auth);
 
   Future<bool> isDeviceSupported() async {
     final bool canAuthenticateWithBiometrics = await _auth.canCheckBiometrics;

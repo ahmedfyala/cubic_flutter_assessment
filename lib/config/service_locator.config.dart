@@ -14,6 +14,8 @@ import 'package:firebase_auth/firebase_auth.dart' as _i59;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
+import 'package:local_auth/local_auth.dart' as _i152;
+import 'package:location/location.dart' as _i645;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 
 import '../core/services/biometric_service.dart' as _i379;
@@ -58,15 +60,16 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.sharedPrefs,
       preResolve: true,
     );
-    gh.lazySingleton<_i848.LocationService>(() => _i848.LocationService());
-    gh.lazySingleton<_i43.FirestoreService>(() => _i43.FirestoreService());
-    gh.lazySingleton<_i379.BiometricService>(() => _i379.BiometricService());
     gh.lazySingleton<_i816.SecurityService>(() => _i816.SecurityService());
     gh.lazySingleton<_i974.FirebaseFirestore>(() => registerModule.firestore);
+    gh.lazySingleton<_i59.FirebaseAuth>(() => registerModule.firebaseAuth);
+    gh.lazySingleton<_i645.Location>(() => registerModule.location);
+    gh.lazySingleton<_i152.LocalAuthentication>(() => registerModule.localAuth);
     gh.lazySingleton<_i558.FlutterSecureStorage>(
         () => registerModule.secureStorage);
-    gh.lazySingleton<_i59.FirebaseAuth>(() => registerModule.firebaseAuth);
     gh.lazySingleton<_i361.Dio>(() => registerModule.dio);
+    gh.lazySingleton<_i848.LocationService>(
+        () => _i848.LocationService(gh<_i645.Location>()));
     gh.lazySingleton<_i607.MapLocalDataSource>(
         () => _i607.MapLocalDataSourceImpl(gh<_i558.FlutterSecureStorage>()));
     gh.lazySingleton<_i764.MapRemoteDataSource>(
@@ -77,14 +80,15 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i235.AuthRemoteDataSource>(
         () => _i877.AuthRemoteDataSourceImpl(gh<_i59.FirebaseAuth>()));
-    gh.factory<_i556.MapCubit>(() => _i556.MapCubit(
-          gh<_i117.MapRepo>(),
-          gh<_i848.LocationService>(),
-          gh<_i43.FirestoreService>(),
-        ));
+    gh.lazySingleton<_i379.BiometricService>(
+        () => _i379.BiometricService(gh<_i152.LocalAuthentication>()));
     gh.lazySingleton<_i800.CacheService>(() => _i800.CacheService(
           gh<_i558.FlutterSecureStorage>(),
           gh<_i460.SharedPreferences>(),
+        ));
+    gh.lazySingleton<_i43.FirestoreService>(() => _i43.FirestoreService(
+          gh<_i974.FirebaseFirestore>(),
+          gh<_i59.FirebaseAuth>(),
         ));
     gh.lazySingleton<_i460.FavoritesRemoteDataSource>(
         () => _i460.FavoritesRemoteDataSourceImpl(
@@ -109,6 +113,11 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.factory<_i506.FavoritesCubit>(
         () => _i506.FavoritesCubit(gh<_i908.FavoritesRepo>()));
+    gh.factory<_i556.MapCubit>(() => _i556.MapCubit(
+          gh<_i117.MapRepo>(),
+          gh<_i848.LocationService>(),
+          gh<_i43.FirestoreService>(),
+        ));
     return this;
   }
 }
