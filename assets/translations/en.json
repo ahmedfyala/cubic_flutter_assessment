@@ -33,5 +33,7 @@
   "find_branches": "Find Nearest Branches",
   "recent_transactions": "Recent Transactions",
   "see_all": "See All",
-  "current_balance": "Current Balance", "expiry_date": "Expiry Date", "cvv": "CVV"
+  "current_balance": "Current Balance", "expiry_date": "Expiry Date", "cvv": "CVV",
+  "favorites": "Favorites",
+  "no_favorites": "No favorites yet"
 }

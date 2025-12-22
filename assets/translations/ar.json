@@ -33,5 +33,7 @@
   "find_branches": "ابحث عن أقرب الفروع",
   "recent_transactions": "أحدث المعاملات",
   "see_all": "عرض الكل",
-  "current_balance": "الرصيد الحالي", "expiry_date": "تاريخ الانتهاء", "cvv": "رمز الأمان"
+  "current_balance": "الرصيد الحالي", "expiry_date": "تاريخ الانتهاء", "cvv": "رمز الأمان",
+  "favorites": "المفضلة",
+  "no_favorites": "لا توجد عناصر مفضلة"
 }
