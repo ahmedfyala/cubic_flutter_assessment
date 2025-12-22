@@ -37,7 +37,8 @@ dependencies:
   fluttertoast:
   cloud_firestore:
   screen_protector:
-  local_auth:
+  local_auth: ^3.0.0
+  connectivity_plus:
   logger:
 
 

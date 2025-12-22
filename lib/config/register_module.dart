@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
@@ -40,4 +41,6 @@ abstract class RegisterModule {
       receiveTimeout: const Duration(seconds: 30),
     ),
   );
+  @lazySingleton
+  Connectivity get connectivity => Connectivity();
 }

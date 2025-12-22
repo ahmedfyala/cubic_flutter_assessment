@@ -46,7 +46,15 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> logout() async {
-    await _cacheService.clearAuthData();
-    emit(AuthInitial());
+    try {
+      
+      await _authRepo.logout(); 
+      
+      await _cacheService.clearAuthData();
+      
+      emit(AuthInitial());
+    } catch (e) {
+      emit(AuthError("Logout failed"));
+    }
   }
 }

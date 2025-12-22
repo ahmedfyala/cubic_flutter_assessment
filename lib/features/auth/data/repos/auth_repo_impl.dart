@@ -22,4 +22,9 @@ class AuthRepoImpl implements AuthRepo {
   ) async {
     return await _remoteDataSource.register(email, password, name);
   }
+
+  @override
+  Future<void> logout() async {
+    await _remoteDataSource.logout();
+  }
 }
