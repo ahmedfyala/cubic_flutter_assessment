@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import '../../../../core/routes/route_names.dart';
 import '../../../../core/utils/notifier.dart';
 import '../../logic/map_cubit.dart';
@@ -17,6 +18,8 @@ class BranchesMapScreen extends StatefulWidget {
 
 class _BranchesMapScreenState extends State<BranchesMapScreen> {
   bool _isBottomSheetOpen = false;
+  bool _isMapReady = false;
+
   GoogleMapController? _mapController;
 
   @override
@@ -82,49 +85,83 @@ class _BranchesMapScreenState extends State<BranchesMapScreen> {
         },
         child: BlocBuilder<MapCubit, MapState>(
           builder: (context, state) {
-            return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 800),
-              transitionBuilder: (child, animation) =>
-                  FadeTransition(opacity: animation, child: child),
-              child: _buildContent(state),
-            );
+            if (state is MapLoading) {
+              _isMapReady = false;
+              return const MapSkeletonView();
+            }
+
+            if (state is MapSuccess) {
+              return Stack(
+                children: [
+                  GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(state.userLat, state.userLng),
+                      zoom: 14,
+                    ),
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: true,
+                    zoomControlsEnabled: false,
+                    markers: state.markers,
+
+                    /// مهم جدًا
+                    cameraTargetBounds: CameraTargetBounds(
+                      LatLngBounds(
+                        southwest: LatLng(
+                          state.userLat - 0.05,
+                          state.userLng - 0.05,
+                        ),
+                        northeast: LatLng(
+                          state.userLat + 0.05,
+                          state.userLng + 0.05,
+                        ),
+                      ),
+                    ),
+
+                    onMapCreated: (controller) async {
+                      _mapController = controller;
+
+                      /// ثبت الكاميرا فورًا
+                      await controller.moveCamera(
+                        CameraUpdate.newLatLngZoom(
+                          LatLng(state.userLat, state.userLng),
+                          14,
+                        ),
+                      );
+
+                      /// سيب وقت بسيط لتحميل tiles
+                      await Future.delayed(const Duration(milliseconds: 300));
+
+                      if (!mounted) return;
+                      setState(() => _isMapReady = true);
+                    },
+                  ),
+
+                  /// ===== Skeleton فوق الماب
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 400),
+                    opacity: _isMapReady ? 0 : 1,
+                    child: IgnorePointer(
+                      ignoring: _isMapReady,
+                      child: const MapSkeletonView(),
+                    ),
+                  ),
+                ],
+              );
+            }
+
+            if (state is MapError) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Text(state.message, textAlign: TextAlign.center),
+                ),
+              );
+            }
+
+            return const SizedBox.shrink();
           },
         ),
       ),
     );
-  }
-
-  Widget _buildContent(MapState state) {
-    if (state is MapLoading) {
-      return const MapSkeletonView(key: ValueKey('skeleton_view'));
-    }
-
-    if (state is MapSuccess) {
-      return GoogleMap(
-        key: const ValueKey('actual_map_view'),
-        initialCameraPosition: CameraPosition(
-          target: LatLng(state.userLat, state.userLng),
-          zoom: 14,
-        ),
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
-        markers: state.markers,
-        zoomControlsEnabled: false,
-
-        onMapCreated: (controller) => _mapController = controller,
-      );
-    }
-
-    if (state is MapError) {
-      return Center(
-        key: const ValueKey('error_view'),
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Text(state.message, textAlign: TextAlign.center),
-        ),
-      );
-    }
-
-    return const SizedBox.shrink();
   }
 }
