@@ -2,6 +2,16 @@
 
 A secure, scalable, and production-ready **Flutter banking application** built as part of a technical interview assessment.
 
+
+## 🎨 Design Credits
+
+- **Design Name:** [Free Banking Mobile App UI Kit]([https://www.figma.com/community](https://www.figma.com/design/cf8mBQnTZsTGEG4Zm1YmrA/Free-Banking-Mobile-App-Ui-Kit-With-light---Dark-Mode-High-Quality-Ui-43--Screen-template--Community-?node-id=1-8591&t=IUSd5oibWI9qsDBI-0))
+- **Credits:** Figma Community
+- - **Usage:** The design was used **as a visual reference only**.
+  - Color palette inspiration
+  - Reference for main screens
+- **Implementation:** Full transformation from high-fidelity design to functional Flutter widgets with support for **Dark Mode** and **Responsive Layouts**.
+
 ---
 
 ## 📌 Project Overview
