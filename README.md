@@ -22,8 +22,7 @@ This project is designed to reflect **Mid-Level Flutter Developer** standards an
 
 ### ✅ Source Code (GitHub Repository)
 > **GitHub Repository:**  
-👉 https://github.com/ahmedfyala/cubic_flutter_assessment  
-_(Replace with actual repo if different)_
+👉 https://github.com/ahmedfyala/cubic_flutter_assessment
 
 ---
 
