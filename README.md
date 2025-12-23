@@ -85,27 +85,29 @@ This file explains **why specific libraries were chosen**, especially for **stor
 ---
 
 ## 🧱 Architecture Overview
+
+```text
 lib/
-├── core/
-│ ├── services/
-│ ├── theme/
-│ ├── routes/
-│ ├── utils/
-│ └── widgets/
-│
-├── features/
-│ ├── auth/
-│ ├── dashboard/
-│ ├── map/
-│ ├── favorites/
-│ ├── onboarding/
-│ └── connectivity/
-│
-├── config/
-│ ├── service_locator.dart
-│ └── register_module.dart
-│
-└── main.dart
+├── config/             # Dependency Injection & Service Locator
+├── core/               # App-wide constants, themes, and shared services
+│   ├── constants/      # API Endpoints & Asset paths
+│   ├── errors/         # Error handling & Failures
+│   ├── localizations/  # Translation logic
+│   ├── routes/         # App routing logic
+│   ├── services/       # Security, Biometric, Firestore, and Location services
+│   ├── theme/          # App colors and themes (Light/Dark)
+│   ├── utils/          # Validators, Notifiers, and Loggers
+│   └── widgets/        # Shared UI components (Buttons, TextFields)
+├── features/           # Feature-based modules
+│   ├── auth/           # Login, Register, and Biometric Setup
+│   ├── connectivity/   # Real-time network monitoring
+│   ├── dashboard/      # Account summary & Transactions
+│   ├── favorites/      # Favorite branches management
+│   ├── map/            # Branch discovery & Google Maps
+│   └── onboarding/     # App intro screens
+└── main.dart           # App entry point & initialization
+
+```
 
 ### 🧠 Architectural Decisions
 - Feature-based modular structure
@@ -150,11 +152,11 @@ easy_localization
 local_auth
 screen_protector
 skeletonizer
-
+```
 ## 👨‍💻 Author
 
 Ahmed Mahmoud Fyala  
-Flutter Mobile Developer – Cairo, Egypt  
+Flutter Developer – Cairo, Egypt  
 
 GitHub: https://github.com/ahmedfyala  
 LinkedIn: https://www.linkedin.com/in/ahmedfyala
